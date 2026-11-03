@@ -1,0 +1,15 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+    <div class="flex flex-col gap-4">
+        <h1 class="text-2xl font-semibold">
+            {% blocktranslate with name=request.user.get_full_name|default:request.user.get_username %}Bienvenido, {{ name }}{% endblocktranslate %}
+        </h1>
+
+        <p class="text-font-subtle-light dark:text-font-subtle-dark">
+            {% translate 'Esta es la página de inicio de la aplicación.' %}
+        </p>
+    </div>
+{% endblock %}

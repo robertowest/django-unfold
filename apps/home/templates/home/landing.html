@@ -1,0 +1,21 @@
+{% extends 'unfold/layouts/unauthenticated.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+    {% include 'unfold/helpers/unauthenticated_title.html' with title=_('Landing Page') %}
+
+    <p class="mb-8 text-font-default-light dark:text-font-default-dark">
+        {% translate 'Esta página tendrá todo el contenido relacionado a una página de inicio con la posibilidad de ingresar al sistema.' %}
+    </p>
+
+    {% if destination_url %}
+        {% component 'unfold/components/button.html' with href=destination_url variant='primary' size='lg' class='w-full' %}
+            {% translate 'Ir al sistema' %}
+        {% endcomponent %}
+    {% else %}
+        {% component 'unfold/components/button.html' with href=login_url|default:'/login/' variant='primary' size='lg' class='w-full' %}
+            {% translate 'Ingresar' %}
+        {% endcomponent %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+    <div class="flex flex-col gap-6">
+
+        {# salud actual del sistema #}
+        <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+            <h2 class="p-5 font-semibold border-b border-base-200 dark:border-base-800">{% translate 'Current system health' %}</h2>
+
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 p-5 border-b border-base-200 dark:border-base-800">
+                <div class="flex flex-wrap gap-x-8 gap-y-6">
+                    {% for kpi in system_kpis %}
+                        <div class="pr-6">
+                            <div class="text-font-subtle-light dark:text-font-subtle-dark">{{ kpi.label }}</div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span class="text-3xl font-semibold">{{ kpi.value }}</span>
+                                <span class="flex items-center gap-1 text-sm {% if kpi.trend == 'up' %}text-green-600{% else %}text-red-600{% endif %}">
+                                    <span class="material-symbols-outlined text-base">{% if kpi.trend == 'up' %}arrow_circle_up{% else %}arrow_circle_down{% endif %}</span>
+                                    {{ kpi.delta }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="lg:w-96">
+                    <div class="font-semibold mb-2 lg:text-right">{% translate 'System status' %}</div>
+                    {% component 'unfold/components/tracker.html' with data=system_status_bars %}{% endcomponent %}
+                </div>
+            </div>
+
+            <div class="p-5">
+                {% component 'unfold/components/chart/line.html' with data=system_chart_json height=320 %}{% endcomponent %}
+            </div>
+        </div>
+
+        {# uso por función #}
+        <div class="bg-white border border-base-200 rounded-default shadow-xs overflow-x-auto dark:bg-base-900 dark:border-base-800">
+            <table class="w-full text-sm">
+                <thead class="bg-base-50 dark:bg-base-800">
+                    <tr>
+                        <th class="px-5 py-3 text-left font-semibold">{% translate 'Function' %}</th>
+                        <th class="px-5 py-3 text-left font-semibold">Time</th>
+                        <th class="px-5 py-3 text-left font-semibold">{% translate 'Average usage' %}</th>
+                        <th class="px-5 py-3 text-left font-semibold">{% translate 'Total price' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fn in system_functions %}
+                        <tr class="border-t border-base-200 dark:border-base-800">
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="size-2.5 rounded-full {{ fn.color }}"></span>
+                                    {{ fn.name }}
+                                </div>
+                            </td>
+                            <td class="px-5 py-4 text-font-subtle-light dark:text-font-subtle-dark">{{ fn.time }}</td>
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-24 h-1.5 rounded-full bg-base-100 dark:bg-base-800 overflow-hidden">
+                                        <div class="h-full rounded-full bg-primary-600" style="width: {{ fn.usage }}%"></div>
+                                    </div>
+                                    <span>{{ fn.usage }}%</span>
+                                </div>
+                            </td>
+                            <td class="px-5 py-4 tabular-nums">${{ fn.price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}

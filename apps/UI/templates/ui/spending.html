@@ -1,0 +1,123 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <div class="flex flex-col gap-6">
+
+        {# resumen total con progreso #}
+        <div class="bg-white border border-base-200 rounded-default shadow-xs p-5 dark:bg-base-900 dark:border-base-800">
+            <div class="flex items-center justify-between mb-3">
+                <span>Total spending overview</span>
+                <span class="rounded-default bg-base-100 px-2 py-0.5 text-sm font-medium dark:bg-base-800">77.1%</span>
+            </div>
+            <div class="flex w-full h-2 rounded-full bg-base-100 dark:bg-base-800 overflow-hidden">
+                <div class="h-full bg-primary-600" style="width: {{ spending_solid_percent }}%"></div>
+                <div class="h-full" style="width: {{ spending_striped_percent }}%; background: repeating-linear-gradient(45deg, var(--color-primary-400) 0 6px, transparent 6px 12px);"></div>
+            </div>
+        </div>
+
+        {# gastos por categoría #}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {% for category in spending_categories %}
+                <div class="bg-white border border-base-200 rounded-default shadow-xs overflow-hidden dark:bg-base-900 dark:border-base-800">
+                    <div class="flex items-center gap-4 p-5 border-b border-base-200 dark:border-base-800">
+                        <span class="w-1 h-12 rounded-full" style="background-color: {{ category.color }}"></span>
+                        <div>
+                            <div class="text-2xl font-semibold">{{ category.total }}</div>
+                            <div class="text-font-subtle-light dark:text-font-subtle-dark">{{ category.name }}</div>
+                        </div>
+                    </div>
+                    {% for label, amount in category.items %}
+                        <div class="flex items-center justify-between px-5 py-3 {% if not forloop.last %}border-b border-base-200 dark:border-base-800{% endif %}">
+                            <span class="text-font-subtle-light dark:text-font-subtle-dark">{{ label }}</span>
+                            <span class="font-semibold">{{ amount }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {# total y mayores gastadores #}
+        <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+            <div class="p-5">
+                <div class="text-2xl font-semibold">{{ spending_total }}</div>
+                <p class="text-font-subtle-light dark:text-font-subtle-dark">Total spending between 1 - 31 October. Increase +3.14% comparing to previous month 1 - 30 September.</p>
+            </div>
+            <div class="border-t border-base-200 dark:border-base-800 p-5">
+                <h2 class="font-semibold mb-4">Top company spenders</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {% for spender in spending_top %}
+                        <div class="relative flex items-center gap-4 border border-base-200 rounded-default p-5 dark:border-base-800">
+                            <span class="text-5xl font-bold text-base-200 dark:text-base-700 select-none">{{ forloop.counter }}</span>
+                            <div>
+                                <div>
+                                    <span class="text-xl font-semibold">{{ spender.amount }}</span>
+                                    <span class="text-font-subtle-light dark:text-font-subtle-dark">last month</span>
+                                </div>
+                                <div class="text-font-subtle-light dark:text-font-subtle-dark">{{ spender.name }} ({{ spender.email }})</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {# filtros decorativos #}
+        <div class="flex items-center justify-end gap-3">
+            <span class="font-semibold">Filter by</span>
+            <select class="rounded-default border border-base-200 bg-white px-3 py-2 dark:border-base-700 dark:bg-base-900">
+                <option>January</option>
+                <option>February</option>
+            </select>
+            <select class="rounded-default border border-base-200 bg-white px-3 py-2 dark:border-base-700 dark:bg-base-900">
+                <option>Monday</option>
+                <option>Tuesday</option>
+            </select>
+        </div>
+
+        {# gráficos #}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 flex flex-col">
+                <h2 class="p-5 font-semibold border-b border-base-200 dark:border-base-800">Doughnut chart</h2>
+                <div class="p-5">
+                    <div class="font-semibold">Doughnut chart</div>
+                    <p class="text-font-subtle-light dark:text-font-subtle-dark mb-4">Expenditure data from the past half year</p>
+                    <div class="relative" style="height: 300px;"><canvas class="chart" data-type="doughnut" data-value="{{ doughnut_json }}"></canvas></div>
+                </div>
+                <div class="border-t border-base-200 dark:border-base-800 p-5">
+                    <div class="font-semibold">Monthly growth increased by 11.2%</div>
+                    <div class="text-font-subtle-light dark:text-font-subtle-dark">Expenditure from the previous half year</div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 flex flex-col">
+                <h2 class="p-5 font-semibold border-b border-base-200 dark:border-base-800">Radar chart</h2>
+                <div class="p-5">
+                    <div class="font-semibold">Radar chart</div>
+                    <p class="text-font-subtle-light dark:text-font-subtle-dark mb-4">Expenditure data from the past half year</p>
+                    <div class="relative" style="height: 300px;"><canvas class="chart" data-type="radar" data-value="{{ radar_json }}"></canvas></div>
+                </div>
+                <div class="border-t border-base-200 dark:border-base-800 p-5">
+                    <div class="font-semibold">Monthly growth increased by 9.2%</div>
+                    <div class="text-font-subtle-light dark:text-font-subtle-dark">Expenditure from the previous half year</div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800 flex flex-col">
+                <h2 class="p-5 font-semibold border-b border-base-200 dark:border-base-800">Pie chart</h2>
+                <div class="p-5">
+                    <div class="font-semibold">Pie chart</div>
+                    <p class="text-font-subtle-light dark:text-font-subtle-dark mb-4">Expenditure data from the past half year</p>
+                    <div class="relative" style="height: 300px;"><canvas class="chart" data-type="pie" data-value="{{ pie_json }}"></canvas></div>
+                </div>
+                <div class="border-t border-base-200 dark:border-base-800 p-5">
+                    <div class="font-semibold">Monthly growth increased by 6.3%</div>
+                    <div class="text-font-subtle-light dark:text-font-subtle-dark">Expenditure from the previous half year</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

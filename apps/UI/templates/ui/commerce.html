@@ -1,0 +1,77 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+    <div class="flex flex-col gap-6">
+
+        {# tarjetas de producto #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for card in product_cards %}
+                <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+                    <div class="flex items-start justify-between gap-4 p-5">
+                        <div>
+                            <div class="text-font-subtle-light dark:text-font-subtle-dark">{{ card.name }} Performance</div>
+                            <div class="text-2xl font-semibold mt-1">{{ card.value }}</div>
+                        </div>
+                        <span class="rounded-default bg-primary-100 text-primary-700 px-2 py-1 text-xs font-semibold uppercase dark:bg-primary-900 dark:text-primary-300">Last 7 days</span>
+                    </div>
+                    <div class="border-t border-base-200 dark:border-base-800 px-5 py-3">
+                        <span class="font-semibold text-green-600">{{ card.delta }}</span>
+                        <span class="text-font-subtle-light dark:text-font-subtle-dark">progress from last week</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# rendimiento de productos #}
+        <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+            <h2 class="p-5 font-semibold border-b border-base-200 dark:border-base-800">Product performance</h2>
+            <div class="p-5">
+                {% component 'unfold/components/chart/bar.html' with data=performance_chart_json height=320 %}{% endcomponent %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+
+            {# ingresos y gastos de la última semana #}
+            <div class="xl:col-span-2 flex flex-col gap-6">
+                <div class="bg-white border border-base-200 rounded-default shadow-xs p-5 dark:bg-base-900 dark:border-base-800">
+                    <div class="text-font-subtle-light dark:text-font-subtle-dark">Last week revenue</div>
+                    <div class="text-2xl font-semibold mt-1 mb-4">$1,234.56</div>
+                    {% component 'unfold/components/chart/line.html' with data=revenue_chart_json height=160 %}{% endcomponent %}
+                </div>
+                <div class="bg-white border border-base-200 rounded-default shadow-xs p-5 dark:bg-base-900 dark:border-base-800">
+                    <div class="text-font-subtle-light dark:text-font-subtle-dark">Last week expenses</div>
+                    <div class="text-2xl font-semibold mt-1 mb-4">$1,234.56</div>
+                    {% component 'unfold/components/chart/line.html' with data=expenses_chart_json height=160 %}{% endcomponent %}
+                </div>
+            </div>
+
+            {# productos con más tendencia #}
+            <div class="xl:col-span-3 bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+                <h2 class="p-5 font-semibold border-b border-base-200 dark:border-base-800">The most trending products in last 2 weeks</h2>
+                <div class="p-5">
+                    <div class="text-3xl font-semibold">{{ trending_total }}</div>
+                    <p class="mt-2 mb-5 text-font-subtle-light dark:text-font-subtle-dark">
+                        Total revenue between <strong>1 - 31 October</strong>. Increase <span class="font-semibold text-green-600">+3.14%</span> comparing to previous month <strong>1 - 30 September</strong>.
+                    </p>
+                    <div class="flex flex-col gap-5 border-t border-base-200 dark:border-base-800 pt-5">
+                        {% for product in trending_products %}
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span>{{ product.name }}</span>
+                                    <span class="rounded-default bg-base-100 px-2 py-0.5 text-sm font-medium dark:bg-base-800">{{ product.amount }}</span>
+                                </div>
+                                <div class="w-full h-1.5 rounded-full bg-base-100 dark:bg-base-800 overflow-hidden">
+                                    <div class="h-full rounded-full bg-primary-600" style="width: {{ product.percent }}%"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <div class="flex flex-col gap-6">
+
+        {# estadísticas de pedidos con mini gráfica #}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {% for stat in order_stats %}
+                <div class="min-w-0 bg-white border border-base-200 rounded-default shadow-xs p-4 flex items-center justify-between gap-2 dark:bg-base-900 dark:border-base-800">
+                    <div>
+                        <div class="text-font-subtle-light dark:text-font-subtle-dark">{{ stat.label }}</div>
+                        <div class="flex items-baseline gap-2 mt-1">
+                            <span class="text-3xl font-semibold">{{ stat.value }}</span>
+                            <span class="flex items-center gap-1 text-sm text-green-600">
+                                <span class="material-symbols-outlined text-base">arrow_circle_up</span>
+                                {{ stat.delta }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="relative overflow-hidden shrink-0" style="width: 96px; height: 48px;">
+                        <canvas class="chart" data-type="line" data-value="{{ stat.sparkline_json }}"></canvas>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# tabla de pedidos #}
+        <div class="bg-white border border-base-200 rounded-default shadow-xs dark:bg-base-900 dark:border-base-800">
+
+            {# barra de búsqueda y filtros #}
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 border-b border-base-200 dark:border-base-800">
+                <div class="flex items-center gap-3 flex-1 max-w-xl rounded-default border border-base-200 bg-white px-3 py-2 dark:border-base-700 dark:bg-base-900">
+                    <span class="flex items-center justify-center size-4 rounded-sm bg-primary-600 text-white">
+                        <span class="material-symbols-outlined text-xs">check</span>
+                    </span>
+                    <span class="flex-1 text-font-subtle-light dark:text-font-subtle-dark">Advanced search with Query Language</span>
+                    <kbd class="rounded border border-base-200 px-1.5 text-xs text-font-subtle-light dark:border-base-700">/</kbd>
+                </div>
+                <button type="button" class="inline-flex items-center gap-2 rounded-default border border-base-200 px-4 py-2 font-medium hover:bg-base-100 dark:border-base-700 dark:hover:bg-base-800">
+                    Filters
+                    <span class="material-symbols-outlined text-base">filter_list</span>
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-base-50 dark:bg-base-800">
+                        <tr>
+                            <th class="w-12 px-4 py-3"></th>
+                            <th class="px-4 py-3 text-left font-semibold">Number</th>
+                            <th class="px-4 py-3 text-left font-semibold">Customer</th>
+                            <th class="px-4 py-3 text-left font-semibold">Products</th>
+                            <th class="px-4 py-3 text-right font-semibold">Total Price</th>
+                            <th class="px-4 py-3 text-left font-semibold">Status</th>
+                            <th class="px-4 py-3"></th>
+                        </tr>
+                    </thead>
+
+                    {% for order in orders %}
+                        <tbody x-data="{ open: {% if order.expanded %}true{% else %}false{% endif %} }" class="border-t border-base-200 dark:border-base-800">
+                            <tr class="hover:bg-base-50 dark:hover:bg-base-800/50">
+                                <td class="px-4 py-3">
+                                    <button type="button" @click="open = !open" class="flex items-center justify-center size-6 rounded hover:bg-base-100 dark:hover:bg-base-800">
+                                        <span class="material-symbols-outlined text-base transition-transform" :class="open ? 'rotate-180' : ''">expand_more</span>
+                                    </button>
+                                </td>
+                                <td class="px-4 py-3 font-medium">{{ order.number }}</td>
+                                <td class="px-4 py-3">{{ order.customer }}</td>
+                                <td class="px-4 py-3 text-font-subtle-light dark:text-font-subtle-dark">
+                                    <span class="inline-flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-base">unfold_more</span>
+                                        Found {{ order.products_count }} products
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right tabular-nums text-font-subtle-light dark:text-font-subtle-dark">{{ order.total }}</td>
+                                <td class="px-4 py-3">
+                                    <span class="rounded-default bg-base-100 px-2 py-1 text-xs font-semibold uppercase dark:bg-base-800">{{ order.status }}</span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button type="button" class="inline-flex items-center gap-2 rounded-default border border-base-200 px-3 py-1.5 font-medium hover:bg-base-100 dark:border-base-700 dark:hover:bg-base-800">
+                                        <span class="material-symbols-outlined text-base">sync</span>
+                                        Check status
+                                    </button>
+                                </td>
+                            </tr>
+
+                            {% if order.products %}
+                                <tr x-show="open" x-cloak>
+                                    <td colspan="7" class="p-4">
+                                        <div class="rounded-default border border-base-200 overflow-hidden dark:border-base-800">
+                                            <table class="w-full text-sm">
+                                                <thead class="bg-base-50 dark:bg-base-800">
+                                                    <tr>
+                                                        <th class="px-4 py-3 text-left font-semibold">Product</th>
+                                                        <th class="px-4 py-3 text-left font-semibold">Quantity</th>
+                                                        <th class="px-4 py-3 text-left font-semibold">Price</th>
+                                                        <th class="px-4 py-3 text-left font-semibold">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for product in order.products %}
+                                                        <tr class="border-t border-base-200 dark:border-base-800">
+                                                            <td class="px-4 py-3 text-font-subtle-light dark:text-font-subtle-dark">{{ product.name }}</td>
+                                                            <td class="px-4 py-3 text-font-subtle-light dark:text-font-subtle-dark">{{ product.quantity }}</td>
+                                                            <td class="px-4 py-3 text-font-subtle-light dark:text-font-subtle-dark">{{ product.price }}</td>
+                                                            <td class="px-4 py-3 text-font-subtle-light dark:text-font-subtle-dark">{{ product.total }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+
+            {# paginación #}
+            <div class="flex items-center gap-3 px-4 py-3 border-t border-base-200 dark:border-base-800">
+                {% for page in order_pages %}
+                    <a href="#" class="px-1 {% if forloop.first %}font-semibold text-primary-600{% else %}text-font-subtle-light hover:text-primary-600 dark:text-font-subtle-dark{% endif %}">{{ page }}</a>
+                {% endfor %}
+                <span class="text-font-subtle-light dark:text-font-subtle-dark">- {{ orders_total }}</span>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

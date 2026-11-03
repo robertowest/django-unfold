@@ -1,0 +1,4 @@
+Django==6.1.*
+django-environ==0.*
+django-unfold==0.*
+django-crispy-forms==2.6
