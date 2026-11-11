@@ -1,0 +1,31 @@
+{% if is_paginated %}
+    <nav class="flex flex-col gap-3 items-center justify-between mt-4 sm:flex-row" aria-label="Paginación">
+        <p class="text-sm text-subtle">
+            Mostrando {{ page_obj.start_index }}–{{ page_obj.end_index }} de {{ paginator.count }}
+        </p>
+
+        <div class="flex flex-wrap gap-1">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="border border-base-200 px-3 py-1.5 rounded-default text-sm hover:bg-base-50 dark:border-base-800 dark:hover:bg-white/[.02]">Anterior</a>
+            {% else %}
+                <span class="border border-base-200 px-3 py-1.5 rounded-default text-sm opacity-50 dark:border-base-800">Anterior</span>
+            {% endif %}
+
+            {% for numero in paginas %}
+                {% if numero == paginator.ELLIPSIS %}
+                    <span class="px-3 py-1.5 text-sm">…</span>
+                {% elif numero == page_obj.number %}
+                    <span aria-current="page" class="bg-primary-600 border border-primary-700 px-3 py-1.5 rounded-default text-sm text-white">{{ numero }}</span>
+                {% else %}
+                    <a href="?page={{ numero }}" class="border border-base-200 px-3 py-1.5 rounded-default text-sm hover:bg-base-50 dark:border-base-800 dark:hover:bg-white/[.02]">{{ numero }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="border border-base-200 px-3 py-1.5 rounded-default text-sm hover:bg-base-50 dark:border-base-800 dark:hover:bg-white/[.02]">Siguiente</a>
+            {% else %}
+                <span class="border border-base-200 px-3 py-1.5 rounded-default text-sm opacity-50 dark:border-base-800">Siguiente</span>
+            {% endif %}
+        </div>
+    </nav>
+{% endif %}

@@ -1,0 +1,45 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+
+    {% trans "Título de la tarjeta" as custom_title %}
+
+    {% component "unfold/components/card.html" with title=custom_title action=custom_action %}
+        Elementos de la tarjeta, por ejemplo: un botón
+
+        {% capture as custom_action %}
+            {% component "unfold/components/button.html" %}
+                Algo por hacer ...
+            {% endcomponent %}
+        {% endcapture %}
+
+    {% endcomponent %}
+
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <!-- Tarjeta 1 -->
+        {% component "unfold/components/card.html" with title="Ventas Totales" label="Últimos 30 días" %}
+            {% component "unfold/components/text.html" %}
+                $45,200.00 USD
+            {% endcomponent %}
+        {% endcomponent %}
+
+        <!-- Tarjeta 2 -->
+        {% component "unfold/components/card.html" with title="Nuevos Usuarios" label="+15%" %}
+            {% component "unfold/components/text.html" %}
+                1,280 registros activos
+            {% endcomponent %}
+        {% endcomponent %}
+
+        <!-- Tarjeta 3 -->
+        {% component "unfold/components/card.html" with title="Rendimiento" label="Estable" %}
+            {% component "unfold/components/text.html" %}
+                99.9% de tiempo de actividad
+            {% endcomponent %}
+        {% endcomponent %}
+    </div>
+
+{% endblock %}

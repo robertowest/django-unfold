@@ -1,0 +1,14 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+
+    {% url "admin:index" as dashboard_link %}       {# url del botón #}
+    {% trans "Título del botón" as button_title %}
+
+    {% component "unfold/components/button.html" with href=dashboard_link %}
+        {{ button_title }}
+    {% endcomponent %}
+
+{% endblock %}

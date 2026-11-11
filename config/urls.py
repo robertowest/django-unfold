@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import include, path
 
 from core.views import UnfoldLoginView
@@ -22,6 +23,8 @@ from core.views import UnfoldLoginView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', UnfoldLoginView.as_view(), name='login'),
+    # django 5+ solo acepta POST en logout; el enlace debe ser un formulario
+    # path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 
     path('ui/', include('apps.UI.urls')),
     path('',    include('apps.home.urls')),

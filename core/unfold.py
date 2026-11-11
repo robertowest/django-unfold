@@ -76,6 +76,7 @@ def navigation_callback(request):
     return DEFAULT_NAVIGATION
 
 
+
 DEFAULT_NAVIGATION = []
 
 ADMIN_NAVIGATION = [
@@ -103,18 +104,85 @@ ADMIN_NAVIGATION = [
 # menú lateral de unfold; los enlaces son '#' hasta sustituirlos por rutas reales
 USER_NAVIGATION = [
     {
-        'title': _('Dashboards'),
+        'title': _('Componentes'),
         'collapsible': False,
+        'items': [
+            {
+                'title': _('Componentes UI'),
+                'icon': 'auto_fix_high',
+                'link': '#',
+                'items': [
+                    {'title': _('Button'),   'link': reverse_lazy('ui:button')},
+                    {'title': _('Card'),     'link': reverse_lazy('ui:card')},
+                    {'title': _('Chart'),    'link': reverse_lazy('ui:chart')},
+                    {'title': _('Cohort'),   'link': '#'},
+                    {'title': _('Layer'),    'link': '#'},
+                    {'title': _('Link'),     'link': '#'},
+                    {'title': _('Progress'), 'link': '#'},
+                    {'title': _('Tracker'),  'link': '#'},
+                ],
+            },
+            {
+                'title': _('Adicionales'),
+                'icon': 'auto_fix_high',
+                'link': '#',
+                'items': [
+                    {'title': _('Filters'), 'link': '#'},
+                    {'title': _('Tabs'),    'link': '#'},
+                    {'title': _('Widgets'), 'link': '#'},
+                    {'title': _('Fields'),  'link': '#'},
+                ],
+            },
+        ],
+    },
+]
+
+USER_NAVIGATION_no = [
+    {
+        'title': _('Componentes'),
+        'collapsible': False,
+        'items': [
+            {
+                'title': _('Componentes UI'),
+                'icon': 'auto_fix_high',
+                'link': '#',
+                'items': [
+                    {'title': _('Button'),   'link': reverse_lazy('ui:button')},
+                    {'title': _('Card'),     'link': '#'},
+                    {'title': _('Chart'),    'link': '#'},
+                    {'title': _('Cohort'),   'link': '#'},
+                    {'title': _('Layer'),    'link': '#'},
+                    {'title': _('Link'),     'link': '#'},
+                    {'title': _('Progress'), 'link': '#'},
+                    {'title': _('Tracker'),  'link': '#'},
+                ],
+            },
+            {
+                'title': _('Adicionales'),
+                'icon': 'auto_fix_high',
+                'link': '#',
+                'items': [
+                    {'title': _('Filters'), 'link': '#'},
+                    {'title': _('Tabs'),    'link': '#'},
+                    {'title': _('Widgets'), 'link': '#'},
+                    {'title': _('Fields'),  'link': '#'},
+                ],
+            },
+        ],
+    },
+    {
+        'title': _('Dashboards'),
+        'collapsible': True,
         'items': [
             {
                 'title': _('Bienvenido'),
                 'icon': 'speed',
                 'link': '#',
                 'items': [
-                    {'title': _('Panel'),    'link': reverse_lazy('ui:dashboard')},
-                    {'title': _('Sistema'),  'link': reverse_lazy('ui:system')},
-                    {'title': _('Comercio'), 'link': reverse_lazy('ui:commerce')},
-                    {'title': _('Gastos'),   'link': reverse_lazy('ui:spending')},
+                    {'title': _('Panel'),    'link': '#' }, # reverse_lazy('ui:dashboard')},
+                    {'title': _('Sistema'),  'link': '#' }, # reverse_lazy('ui:system')},
+                    {'title': _('Comercio'), 'link': '#' }, # reverse_lazy('ui:commerce')},
+                    {'title': _('Gastos'),   'link': '#' }, # reverse_lazy('ui:spending')},
                 ],
             },
         ],
@@ -126,7 +194,7 @@ USER_NAVIGATION = [
             {
                 'title': _('Ordenes'),
                 'icon': 'shopping_cart',
-                'link': reverse_lazy('ui:orders'),
+                'link': '#',             # reverse_lazy('ui:orders'),
                 'badge': '201',
                 'badge_variant': 'warning',
                 'badge_style': 'solid',
@@ -181,7 +249,7 @@ USER_NAVIGATION = [
                 'icon': 'dynamic_form',
                 'link': '#',
                 'items': [
-                    {'title': _('Vertical Form'), 'link': reverse_lazy('ui:forms')},
+                    {'title': _('Vertical Form'),   'link': '#'},   # reverse_lazy('ui:forms')},
                     {'title': _('Horizontal Form'), 'link': '#'},
                     {'title': _('Formset'), 'link': '#'},
                 ],
@@ -221,5 +289,20 @@ UNFOLD = {
         'show_search': lambda request: ( True if request.user.is_superuser else False ),
         'show_all_applications': True,
         'navigation': 'core.unfold.navigation_callback',
+    },
+    'COLORS': {
+        'primary': {
+            '50':  'oklch(97% 0.015 145)',
+            '100': 'oklch(94% 0.035 145)',
+            '200': 'oklch(88% 0.065 145)',
+            '300': 'oklch(80% 0.105 145)',
+            '400': 'oklch(70% 0.145 145)',
+            '500': 'oklch(63% 0.17 145)',
+            '600': 'oklch(57% 0.16 145)',
+            '700': 'oklch(50% 0.14 145)',
+            '800': 'oklch(43% 0.11 145)',
+            '900': 'oklch(36% 0.09 145)',
+            '950': 'oklch(28% 0.07 145)',
+        },
     },
 }

@@ -1,0 +1,50 @@
+{% extends 'unfold/layouts/base.html' %}
+{% load unfold %}
+
+{% block content %}
+
+<div x-data="{ modalAbierto: false }">
+
+    <!-- Botón para abrir -->
+    {% component "unfold/components/button.html" with variant="primary" %}
+        <button @click="modalAbierto = true">
+            Abrir modal
+        </button>
+    {% endcomponent %}
+
+    <!-- Modal -->
+    <div x-show="modalAbierto"
+         x-cloak
+         @keydown.escape.window="modalAbierto = false"
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+        <div @click.outside="modalAbierto = false"
+             class="bg-white dark:bg-base-900 rounded-default shadow-lg w-full max-w-2xl p-6">
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">
+                    Título del modal
+                </h2>
+
+                <button @click="modalAbierto = false">
+                    &times;
+                </button>
+            </div>
+
+            <div>
+                Contenido del modal.
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button @click="modalAbierto = false"
+                        class="px-4 py-2 rounded-default bg-primary-600 text-white">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

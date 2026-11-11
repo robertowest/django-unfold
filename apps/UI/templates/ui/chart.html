@@ -1,0 +1,12 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load i18n unfold %}
+
+{% block content %}
+
+    {% component "unfold/components/card.html" with title="Chart title" %}
+        {% component "unfold/components/chart/bar.html" with component_class="BarChartComponent" %}
+        {% endcomponent %}
+    {% endcomponent %}
+
+    {% endblock %}

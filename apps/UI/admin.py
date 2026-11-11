@@ -1,3 +1,3 @@
-from django.contrib import admin
+# importamos los componentes para que register_component los registre al arrancar
+from apps.UI import components
 
-# Register your models here.

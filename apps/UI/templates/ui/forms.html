@@ -1,0 +1,23 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ form_horizontal.media }}
+    {{ form_vertical.media }}
+{% endblock %}
+
+{% block content %}
+    <div class="flex flex-col gap-10">
+        <section>
+            <h2 class="mb-4 text-lg font-semibold">Formulario horizontal</h2>
+            {% crispy form_horizontal 'unfold_crispy' %}
+        </section>
+
+        <section>
+            <h2 class="mb-4 text-lg font-semibold">Formulario vertical</h2>
+            {% crispy form_vertical 'unfold_crispy' %}
+        </section>
+    </div>
+{% endblock %}

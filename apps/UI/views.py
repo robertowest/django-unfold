@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import admin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
@@ -5,6 +7,23 @@ from django.views.generic import TemplateView
 
 from apps.UI.forms import FormularioHorizontalForm, FormularioVerticalForm
 from apps.UI.services import get_commerce_context, get_orders_context, get_spending_context, get_retention_context, get_system_context
+
+from core.views import UnfoldContextMixin
+
+
+class ButtonView(UnfoldContextMixin, TemplateView):
+    template_name = 'ui/button.html'
+    title = _('Botones')
+
+class CardView(UnfoldContextMixin, TemplateView):
+    template_name = 'ui/card.html'
+    title = _('Tarjetas')
+
+
+class ChartView(UnfoldContextMixin, TemplateView):
+    template_name = 'ui/chart.html'
+    title = _('Gráficos')
+
 
 
 class RetentionView(LoginRequiredMixin, TemplateView):
@@ -72,7 +91,7 @@ class FormsView(LoginRequiredMixin, TemplateView):
     Página de ejemplo con los formularios horizontal y vertical.
     """
 
-    template_name = 'home/forms.html'
+    template_name = 'ui/forms.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
